@@ -29,7 +29,8 @@ def getFishInfo():
                     fishLocationData.append({"id": list(row.values())[0], "name": list(row.values())[8], "latitude": list(row.values())[3], "longitude": list(row.values())[2], "amount": 1})
         elif searchType == "byName":
             for row in reader:
-                if row['scientificname'] == name:
+                #print(str(row['scientificname']), name)
+                if str(row['scientificname']) == name:
                     alreadyHaveFish = False
                     for fishInfo in fishLocationData:
                         if round(float(fishInfo['latitude']), 1) == round(float(list(row.values())[3]), 1) and round(float(fishInfo['longitude']), 1) == round(float(list(row.values())[2]), 1):
@@ -55,7 +56,7 @@ def getFishInfo():
                     continue
         else:
             return "Wrong input!"
-        
+    print(fishLocationData)
     return json.dumps(fishLocationData)
 
 if __name__ == '__main__':
