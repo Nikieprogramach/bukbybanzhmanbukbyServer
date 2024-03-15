@@ -15,10 +15,12 @@ async def connect_ais_stream():
             message = json.loads(message_json)
             message_type = message["MessageType"]
 
-            if message_type == "PositionReport":
+            if message_type == "ShipStaticData":
                 # the message parameter contains a key of the message type which contains the message itself
-                ais_message = message['Message']['PositionReport']
-                print(f"[{datetime.now(timezone.utc)}] ShipId: {ais_message['UserID']} Latitude: {ais_message['Latitude']} Longitude: {ais_message['Longitude']}")
+                #ais_message = message['Message']['PositionReport']
+                if(message['Message']['ShipStaticData']['Type'] == 30):
+                    print(message['MetaData'])
+                #print(f"[{datetime.now(timezone.utc)}] ShipId: {ais_message['UserID']} Latitude: {ais_message['Latitude']} Longitude: {ais_message['Longitude']}")
 
 if __name__ == "__main__":
     asyncio.run(connect_ais_stream())

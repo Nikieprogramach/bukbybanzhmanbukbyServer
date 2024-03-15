@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 CORS(app)
 
+returnShipData = []
 shipData = []
 
 async def connect_ais_stream():
@@ -29,20 +30,33 @@ async def connect_ais_stream():
 
         async for message_json in websocket:
             message = json.loads(message_json)
+            #print(message["MessageType"])
             message_type = message["MessageType"]
 
-            if message_type == "PositionReport":
-                # the message parameter contains a key of the message type which contains the message itself
-                ais_message = message['Message']['PositionReport']
-                #print(f"[{datetime.now(timezone.utc)}] ShipId: {ais_message['UserID']} Latitude: {ais_message['Latitude']} Longitude: {ais_message['Longitude']}")
-                shipEntryAlreadyExists = False
-                for ship in shipData:
-                    if ship['ShipID'] == ais_message['UserID']:
-                        shipEntryAlreadyExists = True
-                        ship['Latitude'] = ais_message['Latitude']
-                        ship['Longitude'] = ais_message['Longitude']
-                if not shipEntryAlreadyExists and len(shipData) < 1000:
-                    shipData.append({"ShipID": ais_message['UserID'], "Latitude": ais_message['Latitude'], "Longitude": ais_message['Longitude']})
+            if message["MessageType"] != "UnknownMessage" and message["MessageType"] == "ShipStaticData":
+                # # the message parameter contains a key of the message type which contains the message itself
+                # #print(f"[{datetime.now(timezone.utc)}] ShipId: {ais_message['UserID']} Latitude: {ais_message['Latitude']} Longitude: {ais_message['Longitude']}")
+                # shipEntryAlreadyExists = False
+                # for ship in shipData:
+                #     if ship['ShipID'] == ais_message['UserID']:
+                #         shipEntryAlreadyExists = True
+                #         ship['Latitude'] = ais_message['Latitude']
+                #         ship['Longitude'] = ais_message['Longitude']
+                # if not shipEntryAlreadyExists and len(shipData) < 1000:
+                #     shipData.append({"ShipID": ais_message['UserID'], "Latitude": ais_message['Latitude'], "Longitude": ais_message['Longitude']})
+                if(message['Message']['ShipStaticData']['Type'] == 30):
+                    ais_message = message['MetaData']
+                    #print(message['Message']['ShipStaticData'])
+                    #print(message)
+                    shipEntryAlreadyExists = False
+                    for ship in shipData:
+                        if ship['ShipID'] == ais_message['MMSI']:
+                            shipEntryAlreadyExists = True
+                            ship['Latitude'] = ais_message['latitude']
+                            ship['Longitude'] = ais_message['longitude']
+                            print("Changed location")
+                    if not shipEntryAlreadyExists and len(shipData) < 200:
+                            shipData.append({"ShipID": ais_message['MMSI'], "Latitude": ais_message['latitude'], "Longitude": ais_message['longitude']})
 
 @app.route('/getFish', methods=['GET'])
 def getFishInfo():
