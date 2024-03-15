@@ -54,7 +54,7 @@ async def connect_ais_stream():
                             ship['Latitude'] = ais_message['latitude']
                             ship['Longitude'] = ais_message['longitude']
                             print("Changed location")
-                    if not shipEntryAlreadyExists and len(shipData) < 1000:
+                    if not shipEntryAlreadyExists and len(shipData) < 200:
                             shipData.append({"ShipID": ais_message['MMSI'], "Latitude": ais_message['latitude'], "Longitude": ais_message['longitude']})
 
 @app.route('/getFish', methods=['GET'])
