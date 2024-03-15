@@ -1,0 +1,4 @@
+b4eb115e-8300-4951-902a-4c465666bff8,121.725563049,12.9461107254,Glenoglossa wassi,Actinopteri
+ID, LONG, LAT, NAME, CLASS
+
+key,id,decimallongitude,decimallatitude,scientificname,class,amount

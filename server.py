@@ -63,43 +63,22 @@ def getFishInfo():
     name = request.args.get('name')
     print(searchType, name)
     fishLocationData = []
-    with open("tuna_data.csv", 'r', newline='', encoding='utf-8') as f_in:
+    with open("summaryData.csv", 'r', newline='', encoding='utf-8') as f_in:
         reader = csv.DictReader(f_in)
         
         if  searchType == "all":
             for row in reader:
-                alreadyHaveFish = False
-                for fishInfo in fishLocationData:
-                    if round(float(fishInfo['latitude']), 1) == round(float(list(row.values())[3]), 1) and round(float(fishInfo['longitude']), 1) == round(float(list(row.values())[2]), 1):
-                        fishInfo["amount"] += 1
-                        alreadyHaveFish = True
-                        break
-                if  not alreadyHaveFish:
-                    fishLocationData.append({"id": list(row.values())[0], "name": list(row.values())[8], "latitude": list(row.values())[3], "longitude": list(row.values())[2], "amount": 1})
+                fishLocationData.append({"id": row['id'], "name": row['scientificname'], "latitude": row['decimallatitude'], "longitude": row['decimallongitude'], "amount": row['amount']})
         elif searchType == "byName":
             for row in reader:
-                if str(row['scientificname']) == name:
-                    alreadyHaveFish = False
-                    for fishInfo in fishLocationData:
-                        if round(float(fishInfo['latitude']), 1) == round(float(list(row.values())[3]), 1) and round(float(fishInfo['longitude']), 1) == round(float(list(row.values())[2]), 1):
-                            fishInfo["amount"] += 1
-                            alreadyHaveFish = True
-                            break
-                    if  not alreadyHaveFish:
-                        fishLocationData.append({"id": list(row.values())[0], "name": list(row.values())[8], "latitude": list(row.values())[3], "longitude": list(row.values())[2], "amount": 1})
+                if row['scientificname'] == name:
+                    fishLocationData.append({"id": row['id'], "name": row['scientificname'], "latitude": row['decimallatitude'], "longitude": row['decimallongitude'], "amount": row['amount']})
                 else:
                     continue
         elif searchType == "byClass":
             for row in reader:
                 if row['class'] == name:
-                    alreadyHaveFish = False
-                    for fishInfo in fishLocationData:
-                        if round(float(fishInfo['latitude']), 1) == round(float(list(row.values())[3]), 1) and round(float(fishInfo['longitude']), 1) == round(float(list(row.values())[2]), 1):
-                            fishInfo["amount"] += 1
-                            alreadyHaveFish = True
-                            break
-                    if  not alreadyHaveFish:
-                        fishLocationData.append({"id": list(row.values())[0], "name": list(row.values())[8], "latitude": list(row.values())[3], "longitude": list(row.values())[2], "amount": 1})
+                    fishLocationData.append({"id": row['id'], "name": row['scientificname'], "latitude": row['decimallatitude'], "longitude": row['decimallongitude'], "amount": row['amount']})
                 else:
                     continue
         else:
