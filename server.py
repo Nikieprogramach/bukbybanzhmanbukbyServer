@@ -23,14 +23,13 @@ shipData = []
 async def connect_ais_stream():
 
     async with websockets.connect("wss://stream.aisstream.io/v0/stream") as websocket:
-        subscribe_message = {"APIKey": "1e5475701789abb7a9a04441e01761ba1ff90d78", "BoundingBoxes": [[[-90, -180], [90, 180]]]}
+        subscribe_message = {"APIKey": "68f4a9e0b43a29f5a4c2a01658e928d53f90c73e", "BoundingBoxes": [[[-90, -180], [90, 180]]]}
 
         subscribe_message_json = json.dumps(subscribe_message)
         await websocket.send(subscribe_message_json)
 
         async for message_json in websocket:
             message = json.loads(message_json)
-            #print(message["MessageType"])
             message_type = message["MessageType"]
 
             if message["MessageType"] != "UnknownMessage" and message["MessageType"] == "ShipStaticData":
@@ -55,7 +54,7 @@ async def connect_ais_stream():
                             ship['Latitude'] = ais_message['latitude']
                             ship['Longitude'] = ais_message['longitude']
                             print("Changed location")
-                    if not shipEntryAlreadyExists and len(shipData) < 200:
+                    if not shipEntryAlreadyExists and len(shipData) < 1000:
                             shipData.append({"ShipID": ais_message['MMSI'], "Latitude": ais_message['latitude'], "Longitude": ais_message['longitude']})
 
 @app.route('/getFish', methods=['GET'])
