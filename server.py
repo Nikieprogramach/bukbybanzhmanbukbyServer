@@ -12,7 +12,6 @@ from datetime import datetime, timezone
 from threading import Thread
 from werkzeug.serving import run_simple
 
-
 app = Flask(__name__)
 
 CORS(app)
